@@ -1,0 +1,22 @@
+.faq__container {
+    /* min-height: 900px; */
+    height: 100%;
+    background-color: #f9ebe4;
+    display: flex;
+    justify-content: center;
+    text-align: start;
+}
+
+#accordion {
+    padding: 8% 7%;
+    width: 80%;
+}
+
+
+@media (max-width: 450px) {
+    #accordion {
+        padding: 5%;
+        width: 95%;
+
+    }
+}

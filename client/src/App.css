@@ -1,0 +1,10 @@
+.App {
+  text-align: center;
+}
+
+.App__body {
+  min-height: 550px;
+  height: 100vh;
+  background-color: #f9ebe4;
+  display: flex;
+}

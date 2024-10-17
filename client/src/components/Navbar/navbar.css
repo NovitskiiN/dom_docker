@@ -1,0 +1,31 @@
+.greeting {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.nav__mobile {
+    display:none;
+}
+
+@media (max-width: 450px) {
+    .nav__mobile {
+        display:flex;
+        justify-content: space-between;
+        margin: 10px 20px;
+    }
+
+    .navbar {
+        display: none !important;
+    }
+
+    .offcanvas-body {
+        background-color: rgb(245,151,148);
+        text-align: left;
+        padding: 42px 25px 25px;
+    }
+
+    .offcanvas {
+        width: 70% !important;
+    }
+}

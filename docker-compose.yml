@@ -1,0 +1,53 @@
+version: '3.8'
+networks:
+ dev:
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - './nginx.conf:/etc/nginx/nginx.conf'
+    depends_on:
+      - mainServer
+      - db
+      - frontend
+    networks:
+      - dev
+  mainServer:
+    container_name: mainServer # имя контейнера
+    image: server:1.0 # название образа
+    restart: always # перезапустит контейнер, если тот вдруг остановится
+    build:
+      context: ./stan_server
+    ports:
+      - "6622:6622"
+    environment:
+      - DATABASE=${DATABASE} # строка авторизации в pg из env для сервера
+    depends_on:
+      - db # подождет контейнер db
+    networks:
+      - dev
+  db:
+    container_name: db
+    image: postgres:15.4-alpine
+    environment:
+      - POSTGRES_DB=${DBNAME} # создаст бд с названием из env
+      - POSTGRES_USER=${PGUSER} # создаст пользователя с правами superuser
+      - POSTGRES_PASSWORD=${PGPASS} # присвоит пользователю пароль
+      - PGDATA=/var/lib/postgresql/data/pgdata # путь к pgdata в образе
+    volumes:
+      - ${PGPATH}/var/lib/postgresql/data # путь к postgres
+    ports:
+      - "5432:5432"
+  frontend:
+    build:
+      context: ./stan_client
+    networks:
+     - dev
+  
+
+
+

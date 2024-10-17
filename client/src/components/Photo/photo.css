@@ -1,0 +1,10 @@
+img,
+video,
+button {
+  display: block;
+}
+
+img {
+  width: 375;
+  height: 667
+}

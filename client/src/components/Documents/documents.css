@@ -1,0 +1,19 @@
+.loading__documents {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.form-check {
+    margin: 15px 0;
+}
+
+#fileInput {
+    display: none;
+}
+
+.loading__item {
+    display: flex;
+}

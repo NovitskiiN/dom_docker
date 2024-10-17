@@ -1,0 +1,23 @@
+.condition__container {
+    height: 100%;
+    background-color: #f9ebe4;
+    display: flex;
+    justify-content: center;
+}
+
+
+.condition__content {
+    width: 70%;
+    background-color: white;
+    margin-top: 50px;
+    text-align: start;
+    padding: 60px;
+}
+
+@media (max-width: 450px) {
+    .condition__content {
+        width: 95%;
+        padding: 60px 10px;
+    }
+}
+
