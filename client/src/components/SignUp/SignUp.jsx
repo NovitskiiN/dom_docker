@@ -24,7 +24,10 @@ const SignUp = () => {
   const handleSubmit = (e) => {
     if (Object.values(data).every((el) => !!el)) {
       e.preventDefault();
-      const url = `${BASE_URL}/auth/signup`;
+      // const url = `${BASE_URL}/auth/signup`;
+      const url = `https://ganadom222.fun:6622/api/auth/signup`;
+
+      fetch("https://jsonplaceholder.typicode.com/todos");
 
       fetch(url, {
         method: "POST",
@@ -46,7 +49,7 @@ const SignUp = () => {
               message:
                 "Verifique su correo electrónico para obtener su nombre de usuario y contraseña",
               type: "success",
-            }) 
+            });
             navigate("/login");
             setForm(formInitialState);
           } else {

@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "dev": "nodemon app .js --ext js,json,jsx --ignore sessions",
+    "db:setup": "NODE_ENV=production npx sequelize db:create && NODE_ENV=production npx sequelize db:migrate && NODE_ENV=production npx sequelize db:seed:all",
+    "start": "NODE_ENV=production node server.js",
+    "dev": "nodemon server .js --ext js,json,jsx --ignore sessions",
     "dbr": "npx sequelize db:drop && npx sequelize db:create && npx sequelize db:migrate && npx sequelize db:seed:all",
     "migrate-prod": "npx sequelize db:migrate --env production",
     "migrate": "npx sequelize db:migrate"
