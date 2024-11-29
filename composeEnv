@@ -1,5 +1,0 @@
-DATABASE=postgresql://postgres.etnmradumajptymawdgf:Alt5NANg7zHzQJVB@aws-0-eu-central-1.pooler.supabase.com:5432/postgres
-DBNAME=stanDb
-PGUSER=StanUser
-PGPASS=123
-PGPATH=/home/nikita/db

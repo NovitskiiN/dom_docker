@@ -1,53 +1,79 @@
-version: '3.8'
-networks:
- dev:
-
+name: deploy-server
 services:
+  postgres-server:
+    container_name: postgres-server
+    hostname: postgresql
+    image: postgres:latest
+    volumes:
+      - postgres-server-master_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-eyRHRpTsI0318Tugqr9}
+      - POSTGRES_USER=${DATABASE_USER:-stan}
+      - POSTGRES_DB=${DATABASE_DEFAULT:-postgres}
+    networks:
+      - services
+    ports:
+      - 5432:5432
+    restart: always
+
+  myapp-service:
+    container_name: myapp-service
+    hostname: myapp
+    image: nikitan1/dom222:1.0
+    volumes:
+      - /home/stan/myapp:/app/assets
+    environment:
+      - DB_NAME_PROD=${DB_NAME_PROD:-standb}
+      - DB_PASS_PROD=${DB_PASS_PROD:-eyRHRpTsI0318Tugqr9}
+      - DB_USER_PROD=${DB_USER_PROD:-stan}
+      - DB_HOST_PROD=${DB_HOST_PROD:-postgres-server}
+      - NODE_ENV=production
+    ports:
+      - 6622:6622
+    networks:
+      - services
+    depends_on:
+      - postgres-server
+    restart: always
+
   nginx:
-    image: nginx:stable-alpine
-    ports:
-      - "80:80"
-      - "443:443"
+    container_name: web_proxy
+    hostname: nginx
+    image: panferovdev/nginxcertbot:1.0
     volumes:
-      - './nginx.conf:/etc/nginx/nginx.conf'
-    depends_on:
-      - mainServer
-      - db
-      - frontend
-    networks:
-      - dev
-  mainServer:
-    container_name: mainServer # имя контейнера
-    image: server:1.0 # название образа
-    restart: always # перезапустит контейнер, если тот вдруг остановится
-    build:
-      context: ./stan_server
+      - /home/stan/nginx:/etc/nginx/conf.d/
+      - /home/stan/letsencrypt:/etc/letsencrypt
     ports:
-      - "6622:6622"
-    environment:
-      - DATABASE=${DATABASE} # строка авторизации в pg из env для сервера
-    depends_on:
-      - db # подождет контейнер db
+      - 80:80
+      - 443:443
     networks:
-      - dev
-  db:
-    container_name: db
-    image: postgres:15.4-alpine
+      - services
+
+  pgadmin:
+    container_name: postgres-pgadmin
+    hostname: postgres-pgadmin
+    image: dpage/pgadmin4
     environment:
-      - POSTGRES_DB=${DBNAME} # создаст бд с названием из env
-      - POSTGRES_USER=${PGUSER} # создаст пользователя с правами superuser
-      - POSTGRES_PASSWORD=${PGPASS} # присвоит пользователю пароль
-      - PGDATA=/var/lib/postgresql/data/pgdata # путь к pgdata в образе
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD:-eyRHRpTsI0318Tugqr9}
+    networks:
+      - services
     volumes:
-      - ${PGPATH}/var/lib/postgresql/data # путь к postgres
+      - /home/stan/pgadmin_data:/var/lib/pgadmin
     ports:
-      - "5432:5432"
-  frontend:
-    build:
-      context: ./stan_client
-    networks:
-     - dev
-  
+      - 5050:80
+    restart: on-failure
+    depends_on:
+      - postgres-server
 
+volumes:
+  postgres-server-master_data:
+    driver: local
+    name: postgres-server-master_data
+  pgadmin_data:
+    driver: local
+    name: pgadmin_data
 
-
+networks:
+  services:
+    name: ${DATABASE_NETWORK:-postgres-server}
